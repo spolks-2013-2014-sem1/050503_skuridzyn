@@ -11,7 +11,6 @@ def abort_handler(signum, frame):
 	print '\nterminate\n'
 	if s != None:
 		s.close()
-		s = None
 	sys.exit(1)
 
 signal.signal(signal.SIGTERM, abort_handler)
