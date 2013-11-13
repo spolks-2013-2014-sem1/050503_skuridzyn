@@ -1,12 +1,14 @@
-import networking 
-import netparser
-import argparse
+from __future__ import print_function
 import os
+import argparse
+import sys
 
 if __name__ == '__main__':
-	sys.path.insert(0, os.path.abspath(os.path.dirname(__file__), "..")))
+	sys.path.insert(0, \
+		os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-
+from spolkslib import networking
+from spolkslib import netparser
 
 def echo_server_routine(conn):
 	while 1:
