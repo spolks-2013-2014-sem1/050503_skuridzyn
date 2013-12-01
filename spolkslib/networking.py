@@ -1,7 +1,7 @@
 import socket
 import sys
 
-def socket_create(port, host='', isTcp=True, listeners=1):
+def server_socket_create(port, host='', isTcp=True, listeners=1):
 
 	if isTcp: sock_type = socket.SOCK_STREAM
 	else: sock_type = socket.SOCK_DGRAM
@@ -14,10 +14,10 @@ def socket_create(port, host='', isTcp=True, listeners=1):
 
 def tcp_server_routine(s, action, action_args=(), greetings="tcp-server is at your service\n"):
 	conn, addr = s.accept()
-	conn.sendall(greetings)
 	print 'Connected by', addr
-	action(conn, *action_args)
+	wait_for_next = action(conn, *action_args)
 	conn.close()
+	return wait_for_next
 
 def udp_server_routine(s, action, action_args=(), greetings="udp-server is at your service\n"):
 	data, addr = sock.recvfrom(1024)
@@ -44,17 +44,20 @@ def make_server(port, action, action_args, isTcp=True, oneConnection=False):
 	BUF_SIZE = 1024
 
 	try:
-		s = socket_create(port)	
+		s = server_socket_create(port)	
 		server_routine = choose_routine(isTcp)
 			
 		server_routine(s, action, action_args)
 		while not oneConnection:
-			server_routine(s, action, action_args)	
+			if not server_routine(s, action, action_args):	
+				break
 
 	except socket.error as e:
 		print ("\nsocket errno %s\n" % (e))
 	except KeyboardInterrupt as e:
 		print ("keyboard interrupt detected\n")
+	except Exception as e:
+		print ("exception occured %s\n" % (e))
 	finally:
 		if s != None:
 			print "socket is closing\n"
