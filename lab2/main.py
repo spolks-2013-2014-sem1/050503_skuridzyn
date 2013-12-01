@@ -14,8 +14,11 @@ def echo_server_routine(conn):
 	while 1:
 		data = conn.recv(1024)
 		if data == "QUIT\n":
-			raise
+			return False
+		if not data:
+			break
 		conn.send(data)
+	return True
 
 
 def main():
