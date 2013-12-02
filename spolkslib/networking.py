@@ -72,35 +72,3 @@ def run_server(port, action, action_args=(), isTcp=True, oneConnection=False):
 	in declaration should always be the conn"""
 
 	make_server(port, action, action_args, isTcp, oneConnection)
-
-
-def transmit(s, buffer):
-	try:
-		buffer_size = len(buffer)
-		bytes_sended = s.send(buffer)
-
-		while (bytes_sended < buffer_size):
-			buffer = buffer[bytes_sended:]
-			buffer_size = len(buffer)
-			bytes_sended = s.send(buffer)
-		
-		return True
-	except Exception as e:
-		print ("send buffer error %s" %  e)
-		return False
-
-def recieve(s, buf_size):
-	buffer, readed = '', 0
-	try:
-		while (True):
-			if readed == buf_size:
-				break
-			chunk = s.recv(buf_size - readed)
-			if not chunk:
-				break
-			readed += len(chunk)
-			buffer += chunk
-	except Exception as e:
-		print ("recieve buffer error %s" % e)
-	finally:
-		return buffer
