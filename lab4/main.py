@@ -54,7 +54,7 @@ def server_routine(conn):
 		else: break
 		data_length += len(data)
 
-        print 'Client disconnected\nWaiting for the next...'
+        print 'Client disconnected\nWaiting for the next client...'
         f.close()
         f_name = f_name[:-1] + str(int(f_name[-1]) + 1)
         return True
@@ -69,19 +69,20 @@ def client_routine(s, f_name):
         bytes_send = 0
 
         while True:
+		
+		#if 1MB of usual have been sended since previous urgent data
+		#send urgent again
+		if bytes_send % URG_PERIOD == 0:
+			s.send('!', socket.MSG_OOB)
+			print ("%s bytes sended" % bytes_send)
+
                 buffer = f.read(BUF_SIZE)
-                rtr, server, ie = select.select([], [s], [], 2.0)
+                rtr, server, ie = select.select([], [s], [], 1.0)
 
                 if len(server) > 0:
                         success = rtwork.transmit(s, buffer)
                 else: break
 
-		#if 1MB of usual have been sended since previous urgent data
-		#send urgent again
-		if bytes_send % URG_PERIOD == 0:
-			s.send('!', socket.MSG_OOB)
-			print i
-			i += 1
 
                 if bytes_send == f_size:
                         break
