@@ -12,38 +12,7 @@ if __name__ == '__main__':
 from spolkslib import networking
 from spolkslib import netparser
 
-BUF_SIZE = 1024 
-
-def transmit(s, buffer):
-	try:
-		buffer_size = len(buffer)
-		bytes_sended = s.send(buffer)
-
-		while (bytes_sended < buffer_size):
-			buffer = buffer[bytes_sended:]
-			buffer_size = len(buffer)
-			bytes_sended = s.send(buffer)
-		
-		return True
-	except Exception as e:
-		print ("send buffer error %s" %  e)
-		return False
-
-def recieve(s, buf_size):
-	buffer, readed = '', 0
-	try:
-		while (True):
-			if readed == buf_size:
-				break
-			chunk = s.recv(buf_size - readed)
-			if not chunk:
-				break
-			readed += len(chunk)
-			buffer += chunk
-	except Exception as e:
-		print ("recieve buffer error %s" % e)
-	finally:
-		return buffer
+BUF_SIZE = 65353 
 		
 def get_fsize(f):
 	old_file_position = f.tell()
@@ -65,7 +34,7 @@ def client_routine(host, port, f_name):
 			buffer = f.read(BUF_SIZE)
 			if bytes_send == f_size:
 				break
-			success = transmit(client_socket, buffer)
+			success = networking.transmit(client_socket, buffer)
 			if not success:
 				break
 			bytes_send += len(buffer) 
@@ -90,7 +59,7 @@ def server_routine(conn):
 	global f_name
 	f = open(f_name, 'wb')
 	while True:
-		data = recieve(conn, BUF_SIZE)
+		data = networking.recieve(conn, BUF_SIZE)
 		if not data:
 			break
 		f.write(data)	
