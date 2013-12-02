@@ -10,11 +10,9 @@ if __name__ == '__main__':
         sys.path.insert(0, \
         	os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from spolkslib import networking, netparser, netuser, rtwork, filework 
+from spolkslib import netserver, netparser, netclient, rtwork, filework 
 
 BUF_SIZE = 65353 
-		
-
 f_name = "file_1"
 
 def server_routine(conn):
@@ -69,10 +67,10 @@ def main():
 	args = parser.parse_args()	
 	
 	if args.m == 'server':
-		networking.run_server(args.port, server_routine)
+		netserver.run_tcp_server(args.port, server_routine)
 	elif args.m == 'user':
 		print args.host, args.port, args.fname
-		netuser.run_client(args.host, args.port, 
+		netclient.run_tcp_client(args.host, args.port, 
 			client_routine, args.fname)	
 
 if __name__ == "__main__":
