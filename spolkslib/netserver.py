@@ -40,10 +40,9 @@ def __make_server(port, action, action_args, isTcp=True, oneConnection=False):
 	also it supports reconnection"""
 
 	s = None
-	BUF_SIZE = 1024
 
 	try:
-		s = __server_socket_create(port)	
+		s = __server_socket_create(port, '', isTcp)	
 		server_routine = __choose_routine(isTcp)
 			
 		server_routine(s, action, action_args)
@@ -72,5 +71,5 @@ def run_tcp_server(port, action, a_args=(), oneConnection=False):
 
 	return __make_server(port, action, a_args, True, oneConnection)
 
-def run_udp_server(port, action, action_args=(), oneConnection=False):
+def run_udp_server(port, action, a_args=(), oneConnection=False):
 	return __make_server(port, action, a_args, False, oneConnection)

@@ -6,9 +6,8 @@ def __transmit(s, buffer, addr = None):
 			socket_send = s.send	
 		else:
 			socket_send = lambda buf: s.sendto(buf, addr)
-
+		
 		bytes_sended = socket_send(buffer)
-
 		while (bytes_sended < buffer_size):
 			buffer = buffer[bytes_sended:]
 			buffer_size = len(buffer)
