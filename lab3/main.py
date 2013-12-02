@@ -4,54 +4,19 @@ import os
 import argparse
 import sys
 import socket
+import select
 
 if __name__ == '__main__':
         sys.path.insert(0, \
-                os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+        	os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from spolkslib import networking
 from spolkslib import netparser
+from spolkslib import netuser
+from spolkslib import filework
 
 BUF_SIZE = 65353 
 		
-def get_fsize(f):
-	old_file_position = f.tell()
-	f.seek(0, os.SEEK_END)
-	size = f.tell()
-	f.seek(old_file_position, os.SEEK_SET)	
-	return size	
-
-def client_routine(host, port, f_name):
-	try:
-		f = None
-		client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		client_socket.connect((host, port))
-		f = open(f_name, 'rb')	
-		f_size = get_fsize(f)
-		bytes_send = 0
-		
-		while True:
-			buffer = f.read(BUF_SIZE)
-			if bytes_send == f_size:
-				break
-			success = networking.transmit(client_socket, buffer)
-			if not success:
-				break
-			bytes_send += len(buffer) 
-		
-		client_socket.shutdown(1)
-		f.close()
-	except KeyboardInterrupt as e:
-		print "Keyboard interrupt was detected!\n"
-	except 	socket.error as e:
-		print ("socket error %s" % e)
-	except IOError as e:
-		print "cannot open the file"
-	finally:
-		if client_socket != None:
-			client_socket.shutdown(1)
-		if f != None: f.close
-		sys.exit(1)
 
 f_name = "file_1"
 
@@ -59,14 +24,41 @@ def server_routine(conn):
 	global f_name
 	f = open(f_name, 'wb')
 	while True:
-		data = networking.recieve(conn, BUF_SIZE)
-		if not data:
-			break
-		f.write(data)	
+		client, rtw, ie = select.select([conn], [], [], 1.0)
+		if len(client) > 0:
+			data = networking.recieve(conn, BUF_SIZE)
+			if not data:
+				break
+			f.write(data)
+		else: break
+	print 'Client disconnected\nWaiting for the next...'	
 	f.close()
 	f_name = f_name[:-1] + str(int(f_name[-1]) + 1)
-	print f_name
 	return True
+
+
+def client_routine(s, f_name):
+	f = open(f_name, 'rb')  
+   	f_size = filework.get_fsize(f)
+        bytes_send = 0
+                
+  	while True:
+        	buffer = f.read(BUF_SIZE)
+		rtr, server, ie = select.select([], [s], [], 2.0)
+			
+		if len(server) > 0:
+           		success = networking.transmit(s, buffer)
+    		else: break
+
+		if bytes_send == f_size:
+            		break
+         	if not success:
+              		break
+         	bytes_send += len(buffer) 
+                
+    	s.close()
+	f.close()
+
 
 def main():
 	parser = argparse.ArgumentParser()
@@ -83,7 +75,8 @@ def main():
 		networking.run_server(args.port, server_routine)
 	elif args.m == 'user':
 		print args.host, args.port, args.fname
-		client_routine(args.host, args.port, args.fname)	
+		netuser.run_client(args.host, args.port, 
+			client_routine, args.fname)	
 
 if __name__ == "__main__":
 	main()
