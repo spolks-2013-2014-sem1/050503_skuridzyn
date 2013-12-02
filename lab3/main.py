@@ -10,10 +10,7 @@ if __name__ == '__main__':
         sys.path.insert(0, \
         	os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from spolkslib import networking
-from spolkslib import netparser
-from spolkslib import netuser
-from spolkslib import filework
+from spolkslib import networking, netparser, netuser, rtwork, filework 
 
 BUF_SIZE = 65353 
 		
@@ -26,7 +23,7 @@ def server_routine(conn):
 	while True:
 		client, rtw, ie = select.select([conn], [], [], 1.0)
 		if len(client) > 0:
-			data = networking.recieve(conn, BUF_SIZE)
+			data = rtwork.recieve(conn, BUF_SIZE)
 			if not data:
 				break
 			f.write(data)
@@ -47,7 +44,7 @@ def client_routine(s, f_name):
 		rtr, server, ie = select.select([], [s], [], 2.0)
 			
 		if len(server) > 0:
-           		success = networking.transmit(s, buffer)
+           		success = rtwork.transmit(s, buffer)
     		else: break
 
 		if bytes_send == f_size:
