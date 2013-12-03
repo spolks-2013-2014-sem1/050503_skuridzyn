@@ -29,6 +29,8 @@ def __recieve(s, buf_size, isTcp = True):
 				chunk = s.recv(buf_size - readed)
 			else:
 				(chunk, addr) = s.recvfrom(buf_size - readed)
+				buffer += chunk
+				return buffer
 			if not chunk:
 				break
 			readed += len(chunk)
