@@ -20,7 +20,7 @@ def __tcp_server_routine(s, action, action_args=()):
 	return wait_for_next
 
 def __udp_server_routine(s, action, action_args=()):
-	action(s, *action_args)
+	return action(s, *action_args)
 
 def __choose_routine(isTcp):
 
@@ -51,16 +51,16 @@ def __make_server(port, action, action_args, isTcp=True, oneConnection=False):
 				break
 
 	except socket.error as e:
-		print ("\nsocket errno %s\n" % (e))
+		print ("\nsocket errno %s" % (e))
 	except KeyboardInterrupt as e:
-		print ("keyboard interrupt detected\n")
+		print ("keyboard interrupt detected")
 	except Exception as e:
-		print ("exception occured %s\n" % (e))
+		print ("exception occured %s" % (e))
 	finally:
 		if s != None:
-			print "socket is closing\n"
+			print "socket is closing"
 			s.close()
-		sys.exit(1)
+		sys.exit(0)
 
 def run_tcp_server(port, action, a_args=(), oneConnection=False):
 
