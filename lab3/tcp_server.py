@@ -1,17 +1,16 @@
 import socket, select
-from spolkslib import rtwork, filework, netserver
+from spolkslib import rtwork, filework
 
 __BUF_SIZE = 65536
-__filename = "file_1"
 
 def tcp_server(server):
 
-        global __filename
+        filename = filework.random_name()
 
         conn, addr = server.accept()
         print "connected by", addr
 
-        f = open(__filename, 'wb')
+        f = open(filename, 'wb')
         while True:
                 rtr, rtw, ie = select.select([conn], [], [], 1.0)
                 if conn in rtr:
@@ -22,6 +21,5 @@ def tcp_server(server):
                 else: break
         print 'Client disconnected\nWaiting for the next...'
         f.close()
-        __filename = __filename[:-1] + str(int(__filename[-1]) + 1)
         return True
 

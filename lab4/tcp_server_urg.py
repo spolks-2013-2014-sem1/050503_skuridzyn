@@ -2,16 +2,15 @@ import socket, select
 from spolkslib import rtwork, filework
 
 __BUF_SIZE = 65536
-__filename = "file_1"
 
 def tcp_server_urg(server):
 
-        global __filename
+        filename = filework.random_name()
         data_length = 0
         conn, addr = server.accept()
         print "connected by", addr
 
-        f = open(__filename, 'wb')
+        f = open(filename, 'wb')
         while True:
                 rtr, rtw, ie = select.select([conn], [], [conn], 1.0)
                 if conn in ie:
@@ -30,6 +29,5 @@ def tcp_server_urg(server):
         f.close()
 	conn.close()
         print 'Client disconnected\nWaiting for the next client...'
-        __filename = __filename[:-1] + str(int(__filename[-1]) + 1)
         return True
 
