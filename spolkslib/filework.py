@@ -1,4 +1,5 @@
 import os
+import time
 
 def get_fsize(f):
 	try:
@@ -11,3 +12,6 @@ def get_fsize(f):
 	else:	
 		return size
 	
+
+def random_name():
+	return 'F' + str(int(time.time() * 10))[4:]
