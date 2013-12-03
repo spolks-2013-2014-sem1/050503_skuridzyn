@@ -22,10 +22,7 @@ def tcp_server_urg(server):
 
                 elif conn in rtr:
                         data = rtwork.recieve(conn, __BUF_SIZE)
-                        if not data:
-				print "STRANGE" 
-				break
-
+                        if not data: break
                         f.write(data)
                 else: break
                 data_length += len(data)
