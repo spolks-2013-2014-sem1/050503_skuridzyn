@@ -1,6 +1,5 @@
 #!/usr/bin/python
 
-from __future__ import print_function
 import os
 import argparse
 import sys
@@ -11,14 +10,22 @@ if __name__ == '__main__':
 
 from spolkslib import netserver, netparser
 
-def echo_server_routine(conn):
-	while 1:
+def echo_server_routine(server):
+
+	conn, addr = server.accept()
+	print "connected by", addr
+
+	while True:
 		data = conn.recv(1024)
 		if data == "QUIT\n":
+			conn.close()
 			return False
 		if not data:
 			break
 		conn.send(data)
+
+	conn.close()
+	print "clent disconnected" 
 	return True
 
 

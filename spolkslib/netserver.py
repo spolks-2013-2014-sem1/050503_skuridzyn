@@ -12,27 +12,8 @@ def __server_socket_create(port, host='', isTcp=True, listeners=1):
 		s.listen(listeners)
 	return s
 
-def __tcp_server_routine(s, action, action_args=()):
-	conn, addr = s.accept()
-	print 'Connected by', addr
-	wait_for_next = action(conn, *action_args)
-	conn.close()
-	return wait_for_next
-
-def __udp_server_routine(s, action, action_args=()):
-	return action(s, *action_args)
-
-def __choose_routine(isTcp):
-
-	"""chosese wether it'll be a tcp connection or udp"""
-
-	if isTcp:
-		return __tcp_server_routine
-	else:
-		return __udp_server_routine
-
 #def make_server(port, action, action_args, isTcp=True, oneConnection=False):
-def __make_server(port, action, action_args, isTcp=True, oneConnection=False):
+def __make_server(port, action, action_args=(), isTcp=True, oneConnection=False):
 
 	"""depending on parametres runs server on port <port>
 	which applyes action to the input data, according to it's
@@ -43,11 +24,9 @@ def __make_server(port, action, action_args, isTcp=True, oneConnection=False):
 
 	try:
 		s = __server_socket_create(port, '', isTcp)	
-		server_routine = __choose_routine(isTcp)
 			
-		server_routine(s, action, action_args)
 		while not oneConnection:
-			if not server_routine(s, action, action_args):	
+			if not action(s, *action_args):	
 				break
 
 	except socket.error as e:
