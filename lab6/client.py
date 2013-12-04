@@ -8,7 +8,8 @@ def __tcp_client_routine(conn, filename, verbosity=False):
 	
         f = open(filename, 'rb')
         f_size = filework.get_fsize(f)
-	__URG_PERIOD = 1024 * 1024
+	__URG_PERIOD = int(f_size) / __TCP_BUF_SIZE / 10 * __TCP_BUF_SIZE
+	print __URG_PERIOD
         bytes_sended = 0
 
         while True:
