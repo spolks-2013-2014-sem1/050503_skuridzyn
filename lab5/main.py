@@ -10,32 +10,27 @@ if __name__ == '__main__':
 
 from spolkslib import netserver, netparser, netclient, rtwork, filework 
 
-from udp_client import * 
-from udp_server import *
-from tcp_client import *
-from tcp_server import *
-from tcp_server_urg import *
-from tcp_client_urg import *
+#from udp_client import * 
+#from tcp_client import *
+#from tcp_client_urg import *
+from server import *
+from client import *
 
 def main():
-	parser = argparse.ArgumentParser()
 
+	parser = argparse.ArgumentParser()
 	port = netparser.parse_type("port")
-	
 	parser = argparse.ArgumentParser()
 	group = parser.add_mutually_exclusive_group(required=True)
-
 	group.add_argument('-t', '--tcp', action='store_true')
 	group.add_argument('-u', '--udp', action='store_true')
-
 	group = parser.add_mutually_exclusive_group(required=True)
-
 	group.add_argument('-s', '--server', type=port, dest='port')
 	group.add_argument('-c', '--client', nargs=3,  
 		type=''.join, dest='args')
-	parser.add_argument('--urgent', action='store_true')
-	
+	parser.add_argument('-v', '--verbosity', action='store_true')
 	args = parser.parse_args()
+
 	if args.args:
 		cl_nfo = netparser.parse_list(args.args)
 		cl_args = (getattr(cl_nfo, "filename"),
@@ -45,25 +40,25 @@ def main():
 
 	if args.udp:
 		if args.port:
-			print "server runs on port", args.port
+			print "udp server runs on port", args.port
 			netserver.run_udp_server(args.port, udp_server)
 		elif cl_nfo:
-			print ("connecting to (%s, %s) ..." % 
+			print ("connecting to (%s, %s)..." % 
 				(cl_nfo.host, cl_nfo.port))
 
 			netclient.run_udp_client(cl_nfo.host, 
 			cl_nfo.port, udp_client, cl_args)
 	elif args.tcp:
 		if args.port:
-			print "server runs on port", args.port
-			if args.urgent:
+			print "tcp server runs on port", args.port
+			if args.verbosity:
 				netserver.run_tcp_server(args.port,
 					tcp_server_urg)
 			else: netserver.run_tcp_server(args.port, tcp_server)
 		elif cl_nfo:
 			print ("connecting to (%s, %s)" % 
 				(cl_nfo.host, cl_nfo.port))
-			if args.urgent:
+			if args.verbosity:
 				netclient.run_tcp_client(cl_nfo.host,
 				cl_nfo.port, tcp_client_urg, cl_nfo.filename)
 			else:

@@ -10,8 +10,8 @@ if __name__ == '__main__':
 
 from spolkslib import netserver, netparser, netclient
 
-from tcp_server import *
-from tcp_client import *
+from server import *
+from client import *
 
 
 def main():

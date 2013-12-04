@@ -8,8 +8,8 @@ if __name__ == '__main__':
         	os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from spolkslib import netserver, netclient, netparser
-from tcp_client_urg import *
-from tcp_server_urg import *
+from client import *
+from server import *
 
 def main():
 
@@ -20,6 +20,7 @@ def main():
         group.add_argument('-c', '--client', nargs=3,
                 type=''.join, dest='args')
 
+	parser.add_argument('-v', '--verbosity', action='store_true')
         args = parser.parse_args()
 
         if args.args:
@@ -29,10 +30,15 @@ def main():
                                 getattr(cl_nfo, "port"))
 
         if args.port:
-                netserver.run_tcp_server(args.port, tcp_server_urg)
+		if args.verbosity:
+                	netserver.run_tcp_server(args.port, tcp_server_urg)
+		else: netserver.run_tcp_server(args.port, tcp_server)
         elif args.args:
-                netclient.run_tcp_client(cl_nfo.host, cl_nfo.port,
-                        tcp_client_urg, cl_nfo.filename)
+		if args.verbosity:
+                	netclient.run_tcp_client(cl_nfo.host, cl_nfo.port,
+                        	tcp_client_urg, cl_nfo.filename)
+		else: netclient.run_tcp_client(cl_nfo.host, cl_nfo.port,
+				tcp_client, cl_nfo.filename)
 
 
 if __name__ == "__main__":
