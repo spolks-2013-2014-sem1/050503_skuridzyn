@@ -19,6 +19,7 @@ def __tcp_server_routine(server, verbosity=False):
 		for s in rtr:
 			if s == server:
 				conn, addr = server.accept()
+				print "connected by {0}".format(addr)
 				connTable.add(conn, addr)
 				continue
 
@@ -33,7 +34,7 @@ def __tcp_server_routine(server, verbosity=False):
 				receive_data = False
                         	data = rtwork.recieve(s, __TCP_BUF_SIZE)
                         	if not data:
-        				print 'Client {0} disconnected!'.format(conn.addr)
+        				print '{0} disconnected'.format(conn.addr)
 					connTable.remove(s)
 					conn.fin = True
 					del conn
@@ -53,13 +54,13 @@ def __udp_server_routine(server):
 		if server in rtr:
 			data, client = rtwork.recieve_from(server, __UDP_BUF_SIZE)
 			if not connTable.get_addr(client):
-				print 'client {0} connected'.format(client)
+				print 'connected by {0}'.format(client)
 				connTable.add(None, client, False)
 			
 			conn = connTable.get_addr(client)
 
 			if data == "FIN":
-				print 'client {0} disconnected'.format(conn.addr)
+				print '{0} disconnected'.format(conn.addr)
 				conn.fin = True
 				connTable.remove_addr(client)
 				del conn

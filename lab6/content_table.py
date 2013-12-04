@@ -31,7 +31,7 @@ class Connection(object):
                         self.f.close()
 
                 elif self.fin == False:
-                        print "eof from client {0} was not detected\nfile will be erased".format(self.addr)
+                        print "eof from {0} was not detected\nerase {1}".format(self.addr, self.filename)
                         os.remove(self.filename)
 
 class ConnTable(object):
