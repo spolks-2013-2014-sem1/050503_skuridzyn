@@ -20,7 +20,7 @@ def __tcp_server_routine(server, verbosity=False):
     while True:
         rtr, rtw, ie = select.select([conn], [], [conn], 10.0)
 
-        if conn in ie and verbosity == True:
+        if verbosity and conn in ie:
             urg = conn.recv(__TCP_BUF_SIZE, socket.MSG_OOB)
             data = rtwork.recieve(conn, __TCP_BUF_SIZE)
             f.write(data)

@@ -25,7 +25,7 @@ def __tcp_server_thread(conn, addr, verbosity):
             urg = conn.recv(__TCP_BUF_SIZE, socket.MSG_OOB)
             data = rtwork.recieve(conn, __TCP_BUF_SIZE)
             f.write(data)
-            print ("%s bytes recieved" % data_length)
+            print "{0} bytes recieved from {1}".format(data_length, addr)
 
         elif conn in rtr:
             data = rtwork.recieve(conn, __TCP_BUF_SIZE)
@@ -68,7 +68,7 @@ class Connection(object):
     def __del__(self):
 
         if self.packets > 0:
-            print "{0} aborted connection\nerase {2}.".format(self.addr,
+            print "{0} aborted connection\nerase {1}.".format(self.addr,
             self.filename)
             os.remove(self.filename)
         else:

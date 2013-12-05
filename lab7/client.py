@@ -50,7 +50,7 @@ def __udp_client_routine(client, filename, host, port):
 
     while True:
         seek = f.tell()
-        buffer = str(packet_number).rjust(16, '0') +
+        buffer = str(packet_number).rjust(16, '0') +\
         str(seek).rjust(16, '0') + f.read(__UDP_BUF_SIZE)
         __resend_until_ack(client, buffer, server)
 

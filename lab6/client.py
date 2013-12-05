@@ -49,9 +49,9 @@ def __udp_client_routine(client, filename, host, port):
         buffer = f.read(__UDP_BUF_SIZE)
         __resend_until_ack(client, buffer, server)
 
-    if bytes_sended == f_size:
-        rtwork.transmit_to(client, "FIN", server)
-        break
+        if bytes_sended == f_size:
+            rtwork.transmit_to(client, "FIN", server)
+            break
 
         bytes_sended += len(buffer)
 

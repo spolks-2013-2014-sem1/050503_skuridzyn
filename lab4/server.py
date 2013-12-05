@@ -7,12 +7,13 @@ __TCP_BUF_SIZE = 65536
 
 def __tcp_server_routine(server, verbosity=False):
 
-    filename = filework.random_name()
     data_length = 0
     conn, addr = server.accept()
     print "connected by", addr
 
+    filename = filework.random_name()
     f = open(filename, 'wb')
+
     while True:
         rtr, rtw, ie = select.select([conn], [], [conn], 10.0)
 

@@ -6,6 +6,7 @@ __TCP_BUF_SIZE = 65536
 
 
 def __tcp_client_routine(conn, filename):
+
     f = open(filename, 'rb')
     f_size = filework.get_fsize(f)
     bytes_sended = 0
@@ -21,6 +22,7 @@ def __tcp_client_routine(conn, filename):
 
         if bytes_sended == f_size or not success:
             break
+
         bytes_sended += len(buffer)
 
     conn.close()
