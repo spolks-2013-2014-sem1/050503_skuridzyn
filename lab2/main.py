@@ -40,11 +40,7 @@ def echo_server_routine(server):
 
 def main():
 
-    parser = argparse.ArgumentParser()
-    parse_t = netparser.parse_type("port")
-    parser.add_argument("port", type=parse_t,
-    help="port number in range [0,65353)")
-
+    parser = netparser.create_parser('-s')
     port = parser.parse_args().port
     netserver.run_tcp_server(port, echo_server_routine)
 

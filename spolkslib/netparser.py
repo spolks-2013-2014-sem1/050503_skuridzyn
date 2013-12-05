@@ -9,6 +9,35 @@ reg_dict = {
 }
 
 
+def create_parser(*p):
+
+    parser = argparse.ArgumentParser()
+    
+    if '-t' in p:
+        if '-u' in p:
+            group = parser.add_mutually_exclusive_group(required=True)
+            group.add_argument('-u', '--udp', action='store_true')
+            group.add_argument('-t', '--tcp', action='store_true')
+        else:
+            parser.add_argument('-t', '--tcp', action='store_true')
+    if '-s' in p:
+        if '-c' in p:
+            group = parser.add_mutually_exclusive_group(required=True)
+            group.add_argument('-s', '--server',
+            type=parse_type("port"), dest='port')
+
+            group.add_argument('-c', '--client', nargs=3,
+            type=''.join, dest='args')
+        else:
+            parser.add_argument('-s', '--server',
+            type=parse_type("port"), dest='port')
+
+    if '-v' in p:
+            parser.add_argument('-v', '--verbosity', action='store_true')
+
+    return parser
+
+
 def parse_it(reg_ex, arg_type, check_function=lambda x: True):
 
     def parse_routine(string):

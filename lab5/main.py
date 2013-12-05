@@ -15,17 +15,7 @@ from client import *
 
 def main():
 
-    parser = argparse.ArgumentParser()
-    port = netparser.parse_type("port")
-    parser = argparse.ArgumentParser()
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument('-t', '--tcp', action='store_true')
-    group.add_argument('-u', '--udp', action='store_true')
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument('-s', '--server', type=port, dest='port')
-    group.add_argument('-c', '--client', nargs=3, type=''.join, dest='args')
-    parser.add_argument('-v', '--verbosity', action='store_true')
-
+    parser = netparser.create_parser('-t', '-u', '-c', '-s', '-v')
     args = parser.parse_args()
 
     if args.args:

@@ -17,12 +17,7 @@ from client import *
 
 def main():
 
-    parser = argparse.ArgumentParser()
-    port = netparser.parse_type('port')
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument('-s', '--server', type=port, dest='port')
-    group.add_argument('-c', '--client', nargs=3, type=''.join, dest='args')
-
+    parser = netparser.create_parser('-c', '-s')
     args = parser.parse_args()
 
     if args.args:
