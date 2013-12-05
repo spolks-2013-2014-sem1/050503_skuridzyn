@@ -20,8 +20,7 @@ def main():
 
     if args.args:
         cl_nfo = netparser.parse_list(args.args)
-        cl_args = (getattr(cl_nfo, "filename"), getattr(cl_nfo, "host"),
-        getattr(cl_nfo, "port"))
+        cl_args = (cl_nfo.filename, cl_nfo.host, cl_nfo.port)
 
     if args.port:
         if args.verbosity:

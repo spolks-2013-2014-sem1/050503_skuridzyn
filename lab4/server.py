@@ -9,7 +9,7 @@ def __tcp_server_routine(server, verbosity=False):
 
     data_length = 0
     conn, addr = server.accept()
-    print "connected by", addr
+    print 'connected by {0}'.format(addr)
 
     filename = filework.random_name()
     f = open(filename, 'wb')
@@ -21,7 +21,7 @@ def __tcp_server_routine(server, verbosity=False):
             urg = conn.recv(__TCP_BUF_SIZE, socket.MSG_OOB)
             data = rtwork.recieve(conn, __TCP_BUF_SIZE)
             f.write(data)
-            print ("%s bytes recieved" % data_length)
+            print '{0} bytes recieved'.format(data_length)
 
         elif conn in rtr:
             data = rtwork.recieve(conn, __TCP_BUF_SIZE)
@@ -35,7 +35,7 @@ def __tcp_server_routine(server, verbosity=False):
 
     f.close()
     conn.close()
-    print 'Client disconnected\nWaiting for the next client...'
+    print '{0} disconnected'.format(addr)
 
     return True
 

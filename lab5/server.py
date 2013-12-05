@@ -12,7 +12,7 @@ def __tcp_server_routine(server, verbosity=False):
 
     data_length = 0
     conn, addr = server.accept()
-    print "connected by", addr
+    print 'connected by {0}'.format(addr)
 
     filename = filework.random_name()
     f = open(filename, 'wb')
@@ -24,7 +24,7 @@ def __tcp_server_routine(server, verbosity=False):
             urg = conn.recv(__TCP_BUF_SIZE, socket.MSG_OOB)
             data = rtwork.recieve(conn, __TCP_BUF_SIZE)
             f.write(data)
-            print ("%s bytes recieved" % data_length)
+            print '{0} bytes received'.format(data_length)
 
         elif conn in rtr:
             data = rtwork.recieve(conn, __TCP_BUF_SIZE)
@@ -38,7 +38,7 @@ def __tcp_server_routine(server, verbosity=False):
 
     f.close()
     conn.close()
-    print 'Client disconnected\nWaiting for the next client...'
+    print '{0} disconnected'.format(addr)
 
     return True
 
@@ -50,7 +50,7 @@ def __udp_server_routine(server):
         data, client = rtwork.recieve_from(server, __UDP_BUF_SIZE)
         filename = filework.random_name()
         f = open(filename, 'wb')
-        print "connected by", client
+        print 'connected by {0}'.format(client)
         f.write(data)
         rtwork.transmit_to(server, "ACK", client)
     else:
@@ -72,11 +72,11 @@ def __udp_server_routine(server):
             break
 
     if not eof_detected:
-        print 'eof is not detected! erase bufer data...'
+        print 'eof is not detected!\nerase bufer data.'
         f.close()
         os.remove(filename)
     else:
-        print 'Client disconnected\nWaiting for the next client...'
+        print '{0} disconnected'.format(addr)
         f.close()
 
     return True
