@@ -31,10 +31,10 @@ def main():
     elif args.args:
         if args.verbosity:
             netclient.run_tcp_client(cl_nfo.host, cl_nfo.port,
-            tcp_client_urg, cl_nfo.filename)
+            tcp_client_urg, (cl_nfo.filename,))
         else:
             netclient.run_tcp_client(cl_nfo.host, cl_nfo.port, tcp_client,
-            cl_nfo.filename)
+            (cl_nfo.filename,))
 
 if __name__ == "__main__":
     main()

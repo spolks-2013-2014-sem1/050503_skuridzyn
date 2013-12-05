@@ -1,8 +1,6 @@
 import socket
 import sys
 
-BUF_SIZE = 65353
-
 
 def __client_socket_create(isTcp=True):
 
@@ -15,52 +13,28 @@ def __client_socket_create(isTcp=True):
     return s
 
 
-def __tcp_client_routine(s, host, port, action, a_args=()):
-
-    s.connect((host, port))
-    if isinstance(a_args, tuple):
-        action(s, *a_args)
-    else:
-        action(s, a_args)
-
-
-def __udp_client_routine(s, host, port, action, a_args=()):
-
-    if isinstance(a_args, tuple):
-        action(s, *a_args)
-    else:
-        action(s, a_args)
-
-
-def __choose_routine(isTcp):
-
-    if isTcp:
-        return __tcp_client_routine
-    else:
-        return __udp_client_routine
-
-
-def __make_client(host, port, action, a_args=(), isTcp=True):
+def __make_client(host, port, action, a_args, isTcp=True):
 
     try:
-
         client_socket = __client_socket_create(isTcp)
-        client_routine = __choose_routine(isTcp)
-        client_routine(client_socket, host, port, action, a_args)
+        if isTcp:
+            client_socket.connect((host, port))
+
+        action(client_socket, *a_args)
 
     except KeyboardInterrupt as e:
-        print "Keyboard interrupt was detected!\n"
+        print 'keyboard interrupt detected.\nterminate.'
     except socket.error as e:
-        print ("socket error %s" % e)
+        print 'socket error {0}'.format(e)
     except IOError as e:
-        print "cannot open the file"
+        print 'can\'t open file.\nterminate'
     except Exception as e:
-        print e
+        print 'exception occured: {0}.\nterminate.'.format(e)
     finally:
         if client_socket != None:
-
             client_socket.close()
-            sys.exit(0)
+
+        sys.exit(0)
 
 
 def run_tcp_client(host, port, action, a_args=()):

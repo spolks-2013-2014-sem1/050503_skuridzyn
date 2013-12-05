@@ -20,8 +20,7 @@ def main():
 
     if args.args:
         cl_nfo = netparser.parse_list(args.args)
-        cl_args = (getattr(cl_nfo, "filename"), getattr(cl_nfo, "host"),
-        getattr(cl_nfo, "port"))
+        cl_args = (cl_nfo.filename, cl_nfo.host, cl_nfo.port)
 
     if args.udp:
         if args.port:
@@ -43,10 +42,10 @@ def main():
             print ("connecting to (%s, %s)" % (cl_nfo.host, cl_nfo.port))
             if args.verbosity:
                 netclient.run_tcp_client(cl_nfo.host, cl_nfo.port,
-                tcp_client_urg, cl_nfo.filename)
+                tcp_client_urg, (cl_nfo.filename,))
             else:
                 netclient.run_tcp_client(cl_nfo.host, cl_nfo.port,
-                tcp_client, cl_nfo.filename)
+                tcp_client, (cl_nfo.filename,))
 
 
 if __name__ == "__main__":

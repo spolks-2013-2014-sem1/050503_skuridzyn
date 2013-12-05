@@ -29,7 +29,7 @@ def main():
         netserver.run_tcp_server(args.port, tcp_server)
     elif args.args:
         netclient.run_tcp_client(cl_nfo.host, cl_nfo.port,
-        tcp_client, cl_nfo.filename)
+        tcp_client, (cl_nfo.filename,))
 
 
 if __name__ == "__main__":
